@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+/* ============================================================
+   设计系统 · Design tokens
+   ============================================================ */
+:root {
+  --background: #f7f8fa;
+  --surface: #ffffff;
+  --surface-2: #f1f3f7;
+  --foreground: #15202b;
+  --muted: #5b6b7b;
+  --border: #e2e6ec;
+
+  --primary: #0e7c86;        /* 主色：科技青 */
+  --primary-strong: #0a5e66;
+  --primary-soft: #e3f4f5;
+  --accent: #2563eb;         /* 强调蓝 */
+  --warn: #c2410c;
+  --warn-soft: #fff1e8;
+  --danger: #b91c1c;
+  --danger-soft: #fdeaea;
+  --ok: #15803d;
+  --ok-soft: #e8f6ec;
+
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(16,32,43,.05), 0 8px 24px rgba(16,32,43,.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b1118;
+    --surface: #121a23;
+    --surface-2: #18222d;
+    --foreground: #e8edf2;
+    --muted: #93a2b1;
+    --border: #243240;
+    --primary: #2dd4bf;
+    --primary-strong: #5eead4;
+    --primary-soft: #10302f;
+    --accent: #60a5fa;
+    --warn: #fb923c;
+    --warn-soft: #2a1c12;
+    --danger: #f87171;
+    --danger-soft: #2a1414;
+    --ok: #4ade80;
+    --ok-soft: #102619;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-primary-soft: var(--primary-soft);
+  --color-accent: var(--accent);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   通用排版（章节正文）
+   ============================================================ */
+.prose-zh { line-height: 1.85; font-size: 1.02rem; color: var(--foreground); }
+.prose-zh p { margin: 0.9rem 0; }
+.prose-zh strong { color: var(--foreground); font-weight: 700; }
+.prose-zh code {
+  background: var(--surface-2);
+  padding: 0.1em 0.4em;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-family: var(--font-geist-mono), monospace;
+}
+
+/* 隐藏滚动条但保留滚动 */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* 卡片悬浮微动效 */
+.card-hover { transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+.card-hover:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--primary); }
+
+@keyframes flip-in { from { transform: rotateY(90deg); opacity: 0; } to { transform: rotateY(0); opacity: 1; } }
+.flip-in { animation: flip-in .25s ease; }
