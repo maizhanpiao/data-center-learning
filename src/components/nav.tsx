@@ -8,6 +8,7 @@ import { useStore } from "@/lib/store";
 const LINKS = [
   { href: "/", label: "仪表盘", icon: "🏠" },
   { href: "/learn", label: "课程", icon: "📚" },
+  { href: "/roadmap", label: "路线图", icon: "🗺️" },
   { href: "/path", label: "进阶地图", icon: "🏆" },
   { href: "/practice", label: "实操练习", icon: "🧪" },
   { href: "/flashcards", label: "抽认卡", icon: "🎴" },
