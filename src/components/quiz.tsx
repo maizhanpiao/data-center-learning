@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { QuizQuestion } from "@/lib/types";
-import { useStore } from "@/lib/store";
+import { useStore, MistakeReason } from "@/lib/store";
 
 function sameSet(a: number[], b: number[]) {
   if (a.length !== b.length) return false;
@@ -10,8 +10,10 @@ function sameSet(a: number[], b: number[]) {
   return b.every((x) => s.has(x));
 }
 
-export function Quiz({ questions, scoreId }: { questions: QuizQuestion[]; scoreId: string }) {
-  const { setQuizScore } = useStore();
+const REASONS: MistakeReason[] = ["概念没懂", "记错了", "审题失误", "粗心"];
+
+export function Quiz({ questions, scoreId, chapterId }: { questions: QuizQuestion[]; scoreId: string; chapterId?: string }) {
+  const { setQuizScore, recordMistakes, tagMistakeReason, state } = useStore();
   const [picks, setPicks] = useState<Record<string, number[]>>({});
   const [submitted, setSubmitted] = useState(false);
 
@@ -33,6 +35,14 @@ export function Quiz({ questions, scoreId }: { questions: QuizQuestion[]; scoreI
   const submit = () => {
     setSubmitted(true);
     setQuizScore(scoreId, correctCount, questions.length);
+    const wrongs = questions
+      .filter((q) => !sameSet(picks[q.id] ?? [], q.answer))
+      .map((q) => ({
+        qid: q.id, scoreId, chapterId,
+        question: q.question, options: q.options, answer: q.answer,
+        yourAnswer: picks[q.id] ?? [], explanation: q.explanation, kind: q.kind,
+      }));
+    recordMistakes(wrongs);
   };
 
   const reset = () => { setPicks({}); setSubmitted(false); };
@@ -78,6 +88,21 @@ export function Quiz({ questions, scoreId }: { questions: QuizQuestion[]; scoreI
             {submitted && (
               <div className={`mt-3 rounded-lg p-3 text-sm ${isCorrect ? "bg-[var(--ok-soft)]" : "bg-[var(--warn-soft)]"}`}>
                 <span className="font-semibold">{isCorrect ? "✅ 答对了" : "📖 解析"}：</span>{q.explanation}
+                {!isCorrect && (
+                  <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-border pt-2">
+                    <span className="text-xs text-muted">🔍 错因复盘：</span>
+                    {REASONS.map((r) => {
+                      const active = state.mistakes[q.id]?.reason === r;
+                      return (
+                        <button key={r} onClick={() => tagMistakeReason(q.id, r)}
+                          className={`rounded-full px-2 py-0.5 text-xs transition ${active ? "bg-primary text-white" : "bg-surface border border-border hover:border-primary"}`}>
+                          {r}
+                        </button>
+                      );
+                    })}
+                    <span className="ml-auto text-xs text-muted">已存入错题本 →</span>
+                  </div>
+                )}
               </div>
             )}
           </div>

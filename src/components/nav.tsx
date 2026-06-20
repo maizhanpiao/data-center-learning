@@ -7,11 +7,13 @@ import { useStore } from "@/lib/store";
 
 const LINKS = [
   { href: "/", label: "仪表盘", icon: "🏠" },
+  { href: "/train", label: "今日训练", icon: "🔥" },
   { href: "/learn", label: "课程", icon: "📚" },
   { href: "/roadmap", label: "路线图", icon: "🗺️" },
   { href: "/path", label: "进阶地图", icon: "🏆" },
   { href: "/practice", label: "实操练习", icon: "🧪" },
   { href: "/flashcards", label: "抽认卡", icon: "🎴" },
+  { href: "/mistakes", label: "错题本", icon: "❌" },
   { href: "/resources", label: "资源库", icon: "🌐" },
   { href: "/settings", label: "设置", icon: "⚙️" },
 ];

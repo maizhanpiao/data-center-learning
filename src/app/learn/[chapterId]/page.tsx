@@ -63,7 +63,7 @@ export default function ChapterPage() {
           {score && (
             <p className="mb-3 text-sm text-muted">上次成绩：{score.correct}/{score.total}</p>
           )}
-          <Quiz questions={c.quiz} scoreId={c.id} />
+          <Quiz questions={c.quiz} scoreId={c.id} chapterId={c.id} />
         </section>
       )}
 

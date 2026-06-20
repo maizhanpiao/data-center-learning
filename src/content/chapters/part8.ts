@@ -1,0 +1,335 @@
+import { Chapter } from "@/lib/types";
+
+// ============================================================
+// 第 8 部分　Linux 系统运维（云原生主线起点，对标 RHCSA/RHCE）
+// 暂归入 tier 3（进阶地图重做后再对齐为 L2）
+// ============================================================
+
+export const PART8: Chapter[] = [
+  // ---------------------- 8-1 ----------------------
+  {
+    id: "8-1",
+    part: 8,
+    index: "L1",
+    title: "Linux 入门与命令行",
+    summary: "为什么运维都用 Linux、发行版、终端与最常用的导航命令。",
+    tier: 3,
+    minutes: 24,
+    objectives: ["理解 Linux 是什么、为何运维必学", "认识终端/Shell 与命令行思维", "掌握 pwd/ls/cd 等基础导航命令"],
+    blocks: [
+      { type: "h2", text: "为什么运维离不开 Linux" },
+      { type: "p", text: "全世界绝大多数服务器、几乎所有云主机和容器，跑的都是 **Linux**。它免费、开源、稳定、可远程用命令行批量管理。**学会 Linux，是云原生这条线的第一块基石**，后面 Docker、K8s、云全都站在它上面。" },
+      { type: "table", headers: ["常见发行版", "特点", "对应认证/场景"], rows: [
+        ["Ubuntu / Debian", "上手友好，社区大，云上最常见", "云服务器、开发"],
+        ["RHEL / CentOS / Rocky", "企业级，红帽生态", "RHCSA/RHCE，国企/银行"],
+        ["openEuler / 麒麟", "国产化", "信创、国内政企"],
+      ] },
+      { type: "callout", variant: "tip", title: "学哪个", body: "命令大同小异。建议用 **Ubuntu** 起步（云上最常见），考红帽证时再补 RHEL 的差异。本部分命令两者通用，差异处会标注。" },
+      { type: "h2", text: "命令行：运维的方向盘" },
+      { type: "p", text: "服务器通常没有桌面，全靠**终端(Terminal)** 里敲命令操作。运行命令的程序叫 **Shell**（最常见的是 **bash**）。命令行看似古老，却能**精确、可重复、可自动化、可远程**地操作成百上千台机器——这正是图形界面给不了的。" },
+      { type: "knowledge", discipline: "计算机", title: "Linux 里“一切皆文件”", body: "在 Linux 看来，文档、硬盘、网卡、甚至进程，几乎都被抽象成“文件”来读写。这套统一哲学让你用一套命令(查看/读写)就能操作各种资源，是理解 Linux 的关键心智模型。" },
+      { type: "h2", text: "最常用的导航命令" },
+      { type: "list", items: [
+        "`pwd` —— 我在哪个目录（打印当前路径）",
+        "`ls` —— 列出当前目录内容；`ls -la` 连隐藏文件和详情一起看",
+        "`cd 目录` —— 进入某目录；`cd ..` 回上一级；`cd ~` 回家目录；`cd /` 到根",
+        "`cat 文件` / `less 文件` —— 查看文件内容（less 可翻页，按 q 退出）",
+        "`head -n 20 文件` / `tail -n 20 文件` —— 看前/后 20 行；`tail -f` 实时跟随",
+      ] },
+      { type: "knowledge", discipline: "计算机", title: "绝对路径 vs 相对路径", body: "绝对路径从根 `/` 开始写全，如 `/etc/nginx/nginx.conf`，在哪都指同一处；相对路径相对你“当前目录”，如 `./conf` 或 `../logs`。`~` 是你的家目录 `/home/用户名` 的简写。" },
+      { type: "callout", variant: "info", title: "不会就问它自己", body: "`命令 --help` 看简要用法，`man 命令` 看完整手册（按 q 退出）。运维高手不是背下所有参数，而是会查、会读文档（这也是为什么**英语阅读**是底层功）。" },
+      { type: "callout", variant: "tip", title: "🧪 动手练（零安装）", body: "打开 **killercoda.com** 的 Linux 场景，是一个真实终端。把上面每个命令都敲一遍：`pwd`→`ls -la`→`cd /etc`→`ls`→`cat os-release`。手敲一遍胜过看十遍。" },
+    ],
+    quiz: [
+      { id: "8-1-q1", kind: "single", question: "运行命令、解释你输入的程序叫什么？", options: ["内核", "Shell（如 bash）", "编辑器", "浏览器"], answer: [1], explanation: "Shell 是命令解释器，最常见的是 bash；它把你的命令交给系统执行。" },
+      { id: "8-1-q2", kind: "single", question: "`ls -la` 中 -a 的作用是？", options: ["按字母排序", "显示隐藏文件", "递归子目录", "只看目录"], answer: [1], explanation: "-a 显示以 . 开头的隐藏文件；-l 显示详细信息。" },
+      { id: "8-1-q3", kind: "single", question: "下列哪个是绝对路径？", options: ["./conf", "../logs", "/etc/nginx/nginx.conf", "~"], answer: [2], explanation: "绝对路径从根 / 开始写全，在任何位置都指向同一文件。" },
+      { id: "8-1-q4", kind: "single", question: "想查看某命令的完整手册，用？", options: ["help 命令", "man 命令", "show 命令", "info 命令 --all"], answer: [1], explanation: "man 命令 打开手册页，按 q 退出；命令 --help 看简要用法。" },
+    ],
+    flashcards: [
+      { id: "8-1-f1", front: "为什么运维必学 Linux", back: "服务器/云主机/容器绝大多数跑 Linux；可远程、可批量、可自动化管理。", chapterId: "8-1" },
+      { id: "8-1-f2", front: "pwd / ls -la / cd 作用", back: "pwd 看当前路径；ls -la 看全部文件含隐藏与详情；cd 切换目录。", chapterId: "8-1" },
+      { id: "8-1-f3", front: "绝对 vs 相对路径", back: "绝对从 / 写全；相对相对当前目录；~ 是家目录。", chapterId: "8-1" },
+      { id: "8-1-f4", front: "怎么查命令用法", back: "命令 --help（简要）、man 命令（完整手册，q 退出）。", chapterId: "8-1" },
+    ],
+  },
+
+  // ---------------------- 8-2 ----------------------
+  {
+    id: "8-2",
+    part: 8,
+    index: "L2",
+    title: "文件、目录与权限",
+    summary: "文件操作、Linux 目录结构与 rwx 权限模型。",
+    tier: 3,
+    minutes: 26,
+    objectives: ["熟练增删改查文件与目录", "了解关键系统目录的用途", "看懂并修改文件权限(chmod/chown)"],
+    blocks: [
+      { type: "h2", text: "文件与目录操作" },
+      { type: "list", items: [
+        "`mkdir 目录` 建目录；`touch 文件` 建空文件",
+        "`cp 源 目标` 复制；目录加 `-r`（`cp -r dir1 dir2`）",
+        "`mv 源 目标` 移动或重命名",
+        "`rm 文件` 删除；删目录 `rm -r 目录`",
+      ] },
+      { type: "callout", variant: "danger", title: "rm -rf 是核武器", body: "`rm -rf /` 会递归强删整个系统且**无回收站、不可恢复**。删除前务必看清路径、当前在哪、是不是 root。生产环境删东西前先 `ls` 确认、能备份就备份。" },
+      { type: "h2", text: "Linux 的目录结构（FHS）" },
+      { type: "table", headers: ["目录", "放什么"], rows: [
+        ["/etc", "配置文件（改服务配置就来这）"],
+        ["/var", "变化的数据，如日志 /var/log"],
+        ["/home", "普通用户的家目录"],
+        ["/root", "root 用户的家目录"],
+        ["/tmp", "临时文件（可能被清空）"],
+        ["/usr", "已安装的程序与库"],
+        ["/bin、/sbin", "可执行命令"],
+      ] },
+      { type: "h2", text: "权限：谁能对文件做什么" },
+      { type: "p", text: "`ls -l` 每行开头像 `-rwxr-xr--`。第 1 位是类型（`-` 文件、`d` 目录、`l` 链接），后面 9 位分三组，分别表示**属主(u)/属组(g)/其他人(o)** 的权限：" },
+      { type: "list", items: [
+        "`r` 读 = 4，`w` 写 = 2，`x` 执行 = 1",
+        "把每组三位相加得一个数字，三组连起来就是常说的权限码",
+      ] },
+      { type: "knowledge", discipline: "数学", title: "权限数字怎么算（421）", body: "rwx=4+2+1=7，r-x=4+1=5，r--=4。所以 `rwxr-xr-x` = 755（属主全权、组和其他人可读可执行）；`rw-r--r--` = 644（常见文件权限）。记住 7=rwx、5=r-x、4=r-- 就够用。" },
+      { type: "list", items: [
+        "`chmod 755 文件` 用数字设权限；`chmod +x 脚本` 给可执行权限",
+        "`chown 用户:组 文件` 改属主/属组（常需 sudo）",
+      ] },
+      { type: "callout", variant: "tip", title: "🧪 动手练", body: "在 killercoda：`touch demo.sh` → `ls -l demo.sh`（看默认权限）→ `chmod 755 demo.sh` → 再 `ls -l` 观察变化 → `chmod +x` 与数字法对比理解。" },
+    ],
+    quiz: [
+      { id: "8-2-q1", kind: "single", question: "权限 `rwxr-xr-x` 对应的数字是？", options: ["777", "755", "644", "750"], answer: [1], explanation: "rwx=7，r-x=5，r-x=5 → 755。" },
+      { id: "8-2-q2", kind: "single", question: "服务的配置文件通常放在哪个目录？", options: ["/var", "/etc", "/tmp", "/home"], answer: [1], explanation: "/etc 存放系统与服务的配置文件。" },
+      { id: "8-2-q3", kind: "tf", question: "rm -rf 删除的文件会进回收站，可以恢复。", options: ["正确", "错误"], answer: [1], explanation: "Linux 命令行 rm 没有回收站，删除即不可恢复，务必谨慎。" },
+      { id: "8-2-q4", kind: "single", question: "给脚本加上可执行权限用？", options: ["chmod +r", "chmod +x", "chown +x", "chmod -w"], answer: [1], explanation: "chmod +x 添加执行(x)权限，脚本才能直接运行。" },
+    ],
+    flashcards: [
+      { id: "8-2-f1", front: "rwx 的数字", back: "r=4, w=2, x=1；相加得每组权限。rwxr-xr-x=755，rw-r--r--=644。", chapterId: "8-2" },
+      { id: "8-2-f2", front: "/etc 与 /var/log", back: "/etc 放配置文件；/var/log 放日志。", chapterId: "8-2" },
+      { id: "8-2-f3", front: "rm -rf 风险", back: "递归强删、无回收站、不可恢复；删前看清路径。", chapterId: "8-2" },
+      { id: "8-2-f4", front: "chmod / chown", back: "chmod 改权限(755 或 +x)；chown 改属主属组。", chapterId: "8-2" },
+    ],
+  },
+
+  // ---------------------- 8-3 ----------------------
+  {
+    id: "8-3",
+    part: 8,
+    index: "L3",
+    title: "用户、进程与服务",
+    summary: "sudo 权限、进程管理与 systemd 服务管理。",
+    tier: 3,
+    minutes: 26,
+    objectives: ["理解用户/root/sudo 与最小权限", "会查看与结束进程", "用 systemctl/journalctl 管理服务与看日志"],
+    blocks: [
+      { type: "h2", text: "用户与权限：root 与 sudo" },
+      { type: "p", text: "**root** 是超级管理员，权力无边、也最危险。日常应用普通用户，需要管理员权限时临时用 **sudo** 提权（如 `sudo apt update`）。这叫**最小权限原则**，能避免误操作和被攻击后果扩大。" },
+      { type: "list", items: [
+        "`whoami` 看我是谁；`id` 看用户和所属组",
+        "`sudo 命令` 以管理员身份执行单条命令",
+        "用户信息在 `/etc/passwd`；`useradd`/`passwd` 建用户、设密码",
+      ] },
+      { type: "h2", text: "进程：正在运行的程序" },
+      { type: "p", text: "每个运行中的程序是一个**进程**，有唯一的 **PID**。排障常要看谁在占 CPU/内存、谁卡住了。" },
+      { type: "list", items: [
+        "`ps aux` 列出所有进程；常配 `| grep nginx` 过滤",
+        "`top`（或更友好的 `htop`）实时看 CPU/内存占用",
+        "`kill PID` 结束进程；顽固进程用 `kill -9 PID`（强制）",
+      ] },
+      { type: "knowledge", discipline: "计算机", title: "守护进程(daemon)与信号", body: "在后台长期运行、提供服务的进程叫守护进程（名字常以 d 结尾，如 sshd、nginx）。kill 其实是“发信号”：默认 TERM(优雅退出)，-9 是 KILL(强制杀死，最后手段)。能优雅就别 -9。" },
+      { type: "h2", text: "服务管理：systemd" },
+      { type: "p", text: "现代 Linux 用 **systemd** 管理服务（开机自启、启停、状态）。核心命令是 `systemctl`：" },
+      { type: "table", headers: ["命令", "作用"], rows: [
+        ["systemctl status nginx", "查看服务状态与最近日志"],
+        ["systemctl start / stop nginx", "启动 / 停止服务"],
+        ["systemctl restart nginx", "重启服务"],
+        ["systemctl enable nginx", "设为开机自启"],
+        ["systemctl disable nginx", "取消开机自启"],
+      ] },
+      { type: "callout", variant: "key", title: "enable ≠ start", body: "`start` 是现在就启动（重启后失效），`enable` 是设置开机自动启动（但现在不一定在跑）。线上服务通常二者都要：`systemctl enable --now nginx` 一步到位。" },
+      { type: "list", items: [
+        "`journalctl -u nginx` 看某服务的日志；`-f` 实时跟随；`-e` 跳到最新",
+      ] },
+      { type: "callout", variant: "tip", title: "🧪 动手练", body: "killercoda 里：`ps aux | grep ssh` 找进程 → `systemctl status ssh` 看状态 → 安装 nginx 后 `systemctl enable --now nginx` → `systemctl status nginx` 看是否 active → `journalctl -u nginx -e` 看日志。" },
+    ],
+    quiz: [
+      { id: "8-3-q1", kind: "single", question: "`systemctl enable nginx` 的作用是？", options: ["立即启动 nginx", "设置开机自启", "卸载 nginx", "查看状态"], answer: [1], explanation: "enable 设置开机自启；要现在也启动用 enable --now 或再 start。" },
+      { id: "8-3-q2", kind: "single", question: "强制杀死一个卡死的进程用？", options: ["kill -9 PID", "rm PID", "stop PID", "systemctl PID"], answer: [0], explanation: "kill -9 发送 KILL 信号强制结束；优先尝试普通 kill(优雅退出)。" },
+      { id: "8-3-q3", kind: "single", question: "需要管理员权限执行单条命令，正确做法是？", options: ["一直用 root 登录", "在命令前加 sudo", "chmod 777 所有文件", "关闭权限检查"], answer: [1], explanation: "用 sudo 临时提权符合最小权限原则，比长期用 root 安全。" },
+      { id: "8-3-q4", kind: "single", question: "查看 nginx 服务的日志用？", options: ["cat nginx", "journalctl -u nginx", "ls /nginx", "top nginx"], answer: [1], explanation: "journalctl -u 服务名 查看该 systemd 服务的日志。" },
+    ],
+    flashcards: [
+      { id: "8-3-f1", front: "root 与 sudo / 最小权限", back: "日常用普通用户，需要时 sudo 临时提权，避免长期用 root。", chapterId: "8-3" },
+      { id: "8-3-f2", front: "看进程与杀进程", back: "ps aux / top 看进程；kill PID 结束，kill -9 强制。", chapterId: "8-3" },
+      { id: "8-3-f3", front: "systemctl 四件套", back: "status/start/stop/restart + enable(开机自启)。enable --now 一步到位。", chapterId: "8-3" },
+      { id: "8-3-f4", front: "看服务日志", back: "journalctl -u 服务名（-f 实时，-e 最新）。", chapterId: "8-3" },
+    ],
+  },
+
+  // ---------------------- 8-4 ----------------------
+  {
+    id: "8-4",
+    part: 8,
+    index: "L4",
+    title: "软件包、磁盘与网络基础",
+    summary: "包管理器、磁盘查看与最常用的网络排查命令。",
+    tier: 3,
+    minutes: 24,
+    objectives: ["用包管理器装/更新软件", "查看磁盘与挂载情况", "掌握 ip/ping/ss/ssh 等网络排查命令"],
+    blocks: [
+      { type: "h2", text: "软件包管理" },
+      { type: "p", text: "Linux 装软件不靠到处下安装包，而用**包管理器**统一安装、升级、卸载并自动处理依赖。两大家族：" },
+      { type: "table", headers: ["发行版", "包管理器", "装软件示例"], rows: [
+        ["Ubuntu / Debian", "apt", "sudo apt update && sudo apt install nginx"],
+        ["RHEL / Rocky / CentOS", "dnf（旧 yum）", "sudo dnf install nginx"],
+      ] },
+      { type: "callout", variant: "info", title: "先 update 再 install", body: "`apt update` 刷新可用软件清单，再 `apt install` 才能装到最新版本。`apt upgrade` 升级已装的所有软件。" },
+      { type: "h2", text: "磁盘与空间" },
+      { type: "list", items: [
+        "`df -h` 看各分区使用率（排查“磁盘满了”第一条命令）",
+        "`du -sh /var/*` 看某目录下各项占用，逐层找“占空间大户”",
+        "`lsblk` 看磁盘和分区结构；`mount` 看挂载情况",
+      ] },
+      { type: "h2", text: "网络排查命令（高频）" },
+      { type: "table", headers: ["命令", "作用"], rows: [
+        ["ip a", "查看本机 IP 地址与网卡"],
+        ["ping 主机", "测试网络是否通、延迟多少"],
+        ["ss -tlnp", "看本机监听了哪些端口、被谁占用"],
+        ["curl http://地址", "命令行发请求，测服务是否正常返回"],
+        ["ssh 用户@主机", "远程登录另一台 Linux"],
+        ["scp 文件 用户@主机:路径", "在机器间复制文件"],
+      ] },
+      { type: "knowledge", discipline: "通信", title: "端口与“服务在不在听”", body: "一台机器靠“IP + 端口”定位某个服务（如 web 默认 80/443、ssh 22）。服务起不来或连不上时，`ss -tlnp` 看端口有没有在监听、被哪个进程占，是网络排障的关键一招。" },
+      { type: "callout", variant: "tip", title: "🧪 动手练", body: "killercoda：`ip a` 看本机 IP → `sudo apt update && sudo apt install -y nginx` → `ss -tlnp | grep 80`（确认 nginx 在听 80）→ `curl http://localhost`（应返回 nginx 欢迎页 HTML）。" },
+    ],
+    quiz: [
+      { id: "8-4-q1", kind: "single", question: "Ubuntu 上安装软件用哪个包管理器？", options: ["dnf", "apt", "brew", "pip"], answer: [1], explanation: "Debian/Ubuntu 系用 apt；RHEL 系用 dnf/yum。" },
+      { id: "8-4-q2", kind: "single", question: "排查“磁盘满了”，先用哪条命令？", options: ["top", "df -h", "ps aux", "ip a"], answer: [1], explanation: "df -h 一眼看出哪个分区使用率到 100%。" },
+      { id: "8-4-q3", kind: "single", question: "查看本机监听了哪些端口用？", options: ["ss -tlnp", "ls -l", "df -h", "chmod"], answer: [0], explanation: "ss -tlnp 列出监听端口及占用进程，网络排障常用。" },
+      { id: "8-4-q4", kind: "single", question: "远程登录另一台 Linux 服务器用？", options: ["scp", "ssh 用户@主机", "ping", "curl"], answer: [1], explanation: "ssh 用户名@主机 进行远程登录；scp 用于传文件。" },
+    ],
+    flashcards: [
+      { id: "8-4-f1", front: "apt vs dnf", back: "Ubuntu/Debian 用 apt；RHEL/Rocky 用 dnf。先 update 再 install。", chapterId: "8-4" },
+      { id: "8-4-f2", front: "磁盘排查", back: "df -h 看分区使用率；du -sh 找占用大户。", chapterId: "8-4" },
+      { id: "8-4-f3", front: "网络四件套", back: "ip a 看IP、ping 测通断、ss -tlnp 看端口、curl 测服务。", chapterId: "8-4" },
+      { id: "8-4-f4", front: "ssh / scp", back: "ssh 远程登录；scp 跨机复制文件。", chapterId: "8-4" },
+    ],
+  },
+
+  // ---------------------- 8-5 ----------------------
+  {
+    id: "8-5",
+    part: 8,
+    index: "L5",
+    title: "Shell 脚本与自动化入门",
+    summary: "变量、管道与重定向、写第一个脚本、定时任务。",
+    tier: 3,
+    minutes: 26,
+    objectives: ["理解管道与重定向", "写一个可执行的 bash 脚本", "用 cron 设置定时任务，建立自动化思维"],
+    blocks: [
+      { type: "h2", text: "把命令“串起来”：管道与重定向" },
+      { type: "list", items: [
+        "`|` 管道：把前一个命令的输出交给后一个处理，如 `ps aux | grep nginx`",
+        "`>` 重定向：把输出写入文件（覆盖），如 `df -h > disk.txt`",
+        "`>>` 追加写入（不覆盖），如 `echo done >> log.txt`",
+      ] },
+      { type: "knowledge", discipline: "计算机", title: "三件文本处理利器", body: "`grep` 按关键词过滤行、`sed` 批量替换文本、`awk` 按列提取/统计。三者配合管道，能从海量日志里秒级捞出你要的信息——运维分析日志的基本功。先记住各自一句话用途，用到再深入。" },
+      { type: "h2", text: "写你的第一个脚本" },
+      { type: "p", text: "脚本就是把一串命令写进一个文件，让它们一键、可重复地执行——**这是从“手动操作”迈向“自动化”的第一步**。" },
+      { type: "list", ordered: true, items: [
+        "新建文件 `backup.sh`，第一行写 `#!/bin/bash`（告诉系统用 bash 运行）",
+        "写命令，例如：`echo \"开始备份 $(date)\"` 和 `cp -r /etc /tmp/etc-backup`",
+        "用变量：`DIR=/tmp/backup`，引用时写 `$DIR`",
+        "赋予执行权限：`chmod +x backup.sh`",
+        "运行：`./backup.sh`",
+      ] },
+      { type: "callout", variant: "key", title: "自动化思维", body: "运维的分水岭是：同一件事做第二遍，就该想“能不能让它自动做”。脚本化 → 定时化 → 配置化(Ansible) → 流水线(CI/CD)，一步步把人从重复劳动里解放出来，价值也随之提升。" },
+      { type: "h2", text: "定时任务：cron" },
+      { type: "list", items: [
+        "`crontab -e` 编辑当前用户的定时任务",
+        "格式：`分 时 日 月 周 命令`，如 `0 2 * * * /home/u/backup.sh` 表示每天凌晨 2 点执行",
+        "`crontab -l` 查看已设的定时任务",
+      ] },
+      { type: "callout", variant: "tip", title: "🧪 动手练", body: "killercoda：写一个 `hello.sh`，内容 `echo \"Hello $(whoami), now is $(date)\"` → `chmod +x hello.sh` → `./hello.sh` 看输出 → 再试 `ps aux | grep ssh > out.txt && cat out.txt` 体会管道与重定向。" },
+    ],
+    quiz: [
+      { id: "8-5-q1", kind: "single", question: "`ps aux | grep nginx` 中 `|` 的作用是？", options: ["保存到文件", "把前一命令输出交给后一命令处理", "后台运行", "比较两者"], answer: [1], explanation: "| 是管道，把前一个命令的输出作为后一个命令的输入。" },
+      { id: "8-5-q2", kind: "single", question: "脚本第一行 `#!/bin/bash` 的作用是？", options: ["注释，无意义", "指定用 bash 解释执行本脚本", "导入库", "设置权限"], answer: [1], explanation: "称为 shebang，告诉系统用哪个解释器(这里是 bash)运行脚本。" },
+      { id: "8-5-q3", kind: "single", question: "让脚本能被直接运行，需要先？", options: ["chmod +x 脚本", "rm 脚本", "重启", "chown root"], answer: [0], explanation: "chmod +x 赋予执行权限后才能 ./脚本 运行。" },
+      { id: "8-5-q4", kind: "single", question: "每天凌晨 2 点自动执行任务，应该用？", options: ["手动定闹钟执行", "cron 定时任务", "systemctl start", "ping"], answer: [1], explanation: "cron(crontab) 用于按时间自动执行任务。" },
+    ],
+    flashcards: [
+      { id: "8-5-f1", front: "管道 | 与重定向 > >>", back: "| 把输出传给下一命令；> 写入文件(覆盖)，>> 追加。", chapterId: "8-5" },
+      { id: "8-5-f2", front: "grep / sed / awk", back: "grep 过滤行、sed 替换文本、awk 按列提取统计。", chapterId: "8-5" },
+      { id: "8-5-f3", front: "写脚本三步", back: "#!/bin/bash 开头 → 写命令 → chmod +x → ./运行。", chapterId: "8-5" },
+      { id: "8-5-f4", front: "cron 定时", back: "crontab -e 编辑；分 时 日 月 周 命令；crontab -l 查看。", chapterId: "8-5" },
+    ],
+  },
+
+  // ---------------------- 8-6 实战 ----------------------
+  {
+    id: "8-6",
+    part: 8,
+    index: "L6",
+    title: "实战项目：搭建你的 homelab",
+    summary: "把联想笔记本变成常开服务器，Mac 远程管它——真实运维雏形。",
+    tier: 3,
+    minutes: 40,
+    objectives: ["在旧笔记本上装 Ubuntu Server 并远程登录", "用 k3s 起一个真 Kubernetes 并部署应用", "建立“Mac 控制端 + 服务器”的运维工作流"],
+    blocks: [
+      { type: "callout", variant: "key", title: "这个项目为什么值钱", body: "走完它，你就在自己两台机器上真刀真枪练过 **Linux + SSH + 容器 + Kubernetes + 部署**，简历能写“自建 homelab”。招聘要的核心动手能力，这里全覆盖。" },
+      { type: "p", text: "**配置**：Mac（M2 Pro/16G）当控制端；联想（i5-6200U/8G/238G SSD）清盘当“服务器”。8G 内存**直接装 Linux + 轻量级 k3s 最稳**，不建议装 Proxmox 再切多台虚拟机（太挤）。" },
+      { type: "callout", variant: "danger", title: "动手前必读", body: "给联想装系统会**清空整块硬盘**，先把里面重要文件备份到移动硬盘/网盘。确认要把这台机专用作服务器后再开始。" },
+      { type: "h2", text: "第一步：装 Ubuntu Server" },
+      { type: "list", ordered: true, items: [
+        "Mac 上下载 **Raspberry Pi Imager**，把 **Ubuntu Server 24.04 LTS** 写入一个 U 盘",
+        "联想插 U 盘，开机按 F12/F2 选择从 U 盘启动",
+        "按提示安装：整盘安装、设置用户名密码、**勾选安装 OpenSSH server**（关键，之后才能远程）",
+        "装完拔 U 盘重启，在联想上登录，运行 `ip a` 记下它的局域网 IP（形如 192.168.x.x）",
+      ] },
+      { type: "h2", text: "第二步：从 Mac 远程登录" },
+      { type: "list", ordered: true, items: [
+        "确保两台机连同一个 WiFi/路由器",
+        "Mac 打开“终端”，运行 `ssh 你的用户名@联想的IP`，输入密码",
+        "登录成功 = 你拥有了第一台“服务器”，以后都在 Mac 上远程管它，联想可以合盖塞角落",
+      ] },
+      { type: "knowledge", discipline: "安全", title: "用密钥登录更专业更安全", body: "进阶：Mac 上 `ssh-keygen` 生成密钥，`ssh-copy-id 用户@IP` 把公钥拷到服务器，之后免密登录且更安全。生产环境普遍禁用密码登录、只用密钥。" },
+      { type: "h2", text: "第三步：一条命令起一个真 Kubernetes" },
+      { type: "list", ordered: true, items: [
+        "在 SSH 进去的联想上运行：`curl -sfL https://get.k3s.io | sh -`（k3s 是轻量级 K8s，几分钟装好）",
+        "`sudo k3s kubectl get nodes`，看到节点状态 Ready = 你的 K8s 跑起来了 🎉",
+      ] },
+      { type: "h2", text: "第四步：部署第一个应用" },
+      { type: "list", ordered: true, items: [
+        "`sudo k3s kubectl create deployment web --image=nginx` 部署一个 nginx",
+        "`sudo k3s kubectl expose deployment web --port=80 --type=NodePort` 暴露端口",
+        "`sudo k3s kubectl get svc web` 看分配的端口，然后 Mac 浏览器访问 `http://联想IP:那个端口`，看到 nginx 欢迎页就成功了",
+      ] },
+      { type: "callout", variant: "tip", title: "✅ 验收清单", body: "① Mac 能 ssh 上联想；② `get nodes` 显示 Ready；③ 浏览器能打开你部署的 nginx 页面。三条都做到，你的 homelab 就跑通了。" },
+      { type: "table", headers: ["常见报错", "排查方向"], rows: [
+        ["ssh 连不上", "确认同一网络、IP 没填错、联想装了 OpenSSH、防火墙没拦 22"],
+        ["get nodes 不是 Ready", "等一两分钟；`systemctl status k3s` 看服务；看内存是否吃满"],
+        ["浏览器打不开应用", "确认用的是 NodePort 端口、用联想IP而非 localhost、服务已 expose"],
+      ] },
+      { type: "h2", text: "下一步进阶（之后章节展开）" },
+      { type: "list", items: [
+        "Mac 上装 `kubectl` 并配置指向联想，免去每次 `sudo k3s kubectl`",
+        "用 **Ansible** 从 Mac 一键自动化部署到联想（自动化主线）",
+        "在集群里上 **Prometheus + Grafana** 做监控（可观测性主线）",
+        "Mac 上用 **kind/k3d** 起多节点集群做更复杂的实验",
+      ] },
+      { type: "callout", variant: "info", title: "📝 复盘问题", body: "做完问自己：k3s 和普通 K8s 什么关系？NodePort 是怎么让外部访问到 Pod 的？如果换成第二台机器加入集群，要做什么？答不上来的就是你的下一个学习点——记进错题本式的清单里。" },
+    ],
+    quiz: [
+      { id: "8-6-q1", kind: "single", question: "装 Ubuntu Server 时为什么要勾选 OpenSSH server？", options: ["为了好看", "之后才能从 Mac 远程登录管理", "加快开机", "节省内存"], answer: [1], explanation: "OpenSSH 让你能用 ssh 远程登录这台服务器，是远程运维的前提。" },
+      { id: "8-6-q2", kind: "single", question: "本方案为什么联想不装 Proxmox 跑多台虚拟机？", options: ["Proxmox 收费", "8G 内存/双核太紧张，直接装 Linux+k3s 更稳", "Proxmox 不能装 Linux", "Mac 不支持"], answer: [1], explanation: "8G/双核跑多 VM 很挤；直接 Linux + 轻量 k3s 把资源留给容器更合适。" },
+      { id: "8-6-q3", kind: "single", question: "从 Mac 远程登录联想服务器的命令是？", options: ["ping 联想IP", "ssh 用户名@联想IP", "scp 联想IP", "curl 联想IP"], answer: [1], explanation: "ssh 用户名@IP 远程登录；两机需在同一网络。" },
+      { id: "8-6-q4", kind: "single", question: "k3s 是什么？", options: ["一种数据库", "轻量级的 Kubernetes 发行版", "一个编辑器", "一种网线"], answer: [1], explanation: "k3s 是轻量级 K8s，适合资源有限的环境和边缘/homelab。" },
+    ],
+    flashcards: [
+      { id: "8-6-f1", front: "homelab 两机分工", back: "Mac=控制端(ssh/kubectl/kind)；联想=常开服务器(Ubuntu+k3s)。", chapterId: "8-6" },
+      { id: "8-6-f2", front: "装 Ubuntu Server 关键勾选", back: "勾选 OpenSSH server，之后才能远程 ssh 管理。", chapterId: "8-6" },
+      { id: "8-6-f3", front: "一条命令装 K8s", back: "curl -sfL https://get.k3s.io | sh - ，装轻量级 k3s。", chapterId: "8-6" },
+      { id: "8-6-f4", front: "homelab 验收三条", back: "①Mac能ssh上 ②get nodes Ready ③浏览器打开部署的nginx。", chapterId: "8-6" },
+    ],
+  },
+];

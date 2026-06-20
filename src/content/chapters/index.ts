@@ -7,9 +7,11 @@ import { PART4 } from "./part4";
 import { PART5 } from "./part5";
 import { PART6 } from "./part6";
 import { PART7 } from "./part7";
+import { PART8 } from "./part8";
+import { PART9 } from "./part9";
 
 export const CHAPTERS: Chapter[] = [
-  ...PART0, ...PART1, ...PART2, ...PART3, ...PART4, ...PART5, ...PART6, ...PART7,
+  ...PART0, ...PART1, ...PART2, ...PART3, ...PART4, ...PART5, ...PART6, ...PART7, ...PART8, ...PART9,
 ];
 
 export function chapterById(id: string): Chapter | undefined {

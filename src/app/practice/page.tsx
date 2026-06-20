@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { WIDGET_META, Widget } from "@/components/widgets";
 import { WidgetKey } from "@/lib/types";
 import { PageHeader } from "@/components/ui";
@@ -21,7 +22,21 @@ export default function PracticePage() {
 
   return (
     <div>
-      <PageHeader emoji="🧪" title="实操练习" subtitle="浏览器内置计算器与工具，随时动手算、动手练；以及引导式自助实验手册。" />
+      <PageHeader emoji="🧪" title="实操练习" subtitle="浏览器内动手练：故障排查模拟、命令行训练、计算器工具，以及引导式自助实验手册。" />
+
+      <h2 className="mb-3 text-lg font-bold">🎮 模拟实操</h2>
+      <div className="mb-10 grid gap-3 sm:grid-cols-2">
+        <Link href="/practice/scenarios" className="card-hover rounded-2xl border border-border bg-surface p-5">
+          <div className="flex items-center gap-2 text-base font-bold">🚨 故障排查情景模拟</div>
+          <p className="mt-1 text-sm text-muted">真实告警场景下一步步决策处置，练排障思路与流程，不需要真硬件。</p>
+          <span className="mt-2 inline-block text-xs font-semibold text-primary-strong">开始演练 →</span>
+        </Link>
+        <Link href="/practice/cli" className="card-hover rounded-2xl border border-border bg-surface p-5">
+          <div className="flex items-center gap-2 text-base font-bold">⌨️ 命令行模拟题</div>
+          <p className="mt-1 text-sm text-muted">给任务敲命令、即时判对错，练 Linux / Docker / Kubernetes 命令肌肉记忆。</p>
+          <span className="mt-2 inline-block text-xs font-semibold text-primary-strong">开始训练 →</span>
+        </Link>
+      </div>
 
       <h2 className="mb-3 text-lg font-bold">🧮 内置计算器与实操工具</h2>
       <div className="grid gap-3 sm:grid-cols-2">

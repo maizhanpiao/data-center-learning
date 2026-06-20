@@ -13,12 +13,35 @@ export interface SRS {
   reps: number;
 }
 
+/** 错因标签 */
+export type MistakeReason = "概念没懂" | "记错了" | "审题失误" | "不会操作" | "粗心";
+
+/** 错题本条目：闭环学习的核心 —— 自动捕获、可复盘、可重测 */
+export interface Mistake {
+  qid: string;
+  scoreId: string;       // 来源（章节/模拟考）
+  chapterId?: string;
+  question: string;
+  options: string[];
+  answer: number[];
+  yourAnswer: number[];
+  explanation: string;
+  kind: "single" | "multi" | "tf";
+  reason?: MistakeReason; // 复盘错因
+  wrongCount: number;     // 累计错误次数
+  streak: number;         // 重测连对次数
+  due: number;            // 下次重测时间戳
+  retired: boolean;       // 连对达标 → 已掌握毕业
+  lastTs: number;
+}
+
 export interface UserState {
   completedChapters: Record<string, boolean>;
   quizScores: Record<string, { correct: number; total: number; ts: number }>;
   notes: Record<string, string>;
   flashcards: Record<string, SRS>;
   practiceDone: Record<string, boolean>;
+  mistakes: Record<string, Mistake>;
   name: string;
   updatedAt: number;
 }
@@ -29,6 +52,7 @@ const EMPTY: UserState = {
   notes: {},
   flashcards: {},
   practiceDone: {},
+  mistakes: {},
   name: "",
   updatedAt: 0,
 };
@@ -46,6 +70,10 @@ interface StoreCtx {
   setQuizScore: (id: string, correct: number, total: number) => void;
   setNote: (key: string, text: string) => void;
   reviewCard: (id: string, quality: "again" | "good" | "easy") => void;
+  recordMistakes: (items: Omit<Mistake, "wrongCount" | "streak" | "due" | "retired" | "lastTs">[]) => void;
+  tagMistakeReason: (qid: string, reason: MistakeReason) => void;
+  retestMistake: (qid: string, correct: boolean) => void;
+  removeMistake: (qid: string) => void;
   setPracticeDone: (id: string, done: boolean) => void;
   setName: (n: string) => void;
   configurePasscode: (code: string) => Promise<boolean>;
@@ -174,6 +202,62 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     });
   }, [mutate]);
 
+  // 错题本：做错自动归档（已掌握毕业的题再次做错会重新激活）
+  const recordMistakes = useCallback((items: Omit<Mistake, "wrongCount" | "streak" | "due" | "retired" | "lastTs">[]) => {
+    if (items.length === 0) return;
+    mutate((s) => {
+      const m = { ...s.mistakes };
+      const now = Date.now();
+      for (const it of items) {
+        const prev = m[it.qid];
+        m[it.qid] = {
+          ...it,
+          reason: prev?.reason,
+          wrongCount: (prev?.wrongCount ?? 0) + 1,
+          streak: 0,
+          due: now,        // 立即进入重测队列
+          retired: false,  // 再次做错 → 重新激活
+          lastTs: now,
+        };
+      }
+      return { ...s, mistakes: m };
+    });
+  }, [mutate]);
+
+  const tagMistakeReason = useCallback((qid: string, reason: MistakeReason) => {
+    mutate((s) => {
+      const cur = s.mistakes[qid];
+      if (!cur) return s;
+      return { ...s, mistakes: { ...s.mistakes, [qid]: { ...cur, reason } } };
+    });
+  }, [mutate]);
+
+  // 重测：连对 2 次 → 毕业(已掌握)；答错 → 连对清零、留在队列
+  const retestMistake = useCallback((qid: string, correct: boolean) => {
+    mutate((s) => {
+      const cur = s.mistakes[qid];
+      if (!cur) return s;
+      const now = Date.now();
+      let { streak, wrongCount, retired, due } = cur;
+      if (correct) {
+        streak += 1;
+        if (streak >= 2) { retired = true; due = now + 7 * 86400000; }
+        else { due = now + 1 * 86400000; }
+      } else {
+        streak = 0; wrongCount += 1; retired = false; due = now;
+      }
+      return { ...s, mistakes: { ...s.mistakes, [qid]: { ...cur, streak, wrongCount, retired, due, lastTs: now } } };
+    });
+  }, [mutate]);
+
+  const removeMistake = useCallback((qid: string) => {
+    mutate((s) => {
+      const m = { ...s.mistakes };
+      delete m[qid];
+      return { ...s, mistakes: m };
+    });
+  }, [mutate]);
+
   const configurePasscode = useCallback(async (code: string) => {
     try {
       const r = await fetch("/api/state", { headers: { "x-passcode": code } });
@@ -224,6 +308,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     <Ctx.Provider value={{
       state, sync, passcodeSet,
       toggleChapter, setQuizScore, setNote, reviewCard, setPracticeDone, setName,
+      recordMistakes, tagMistakeReason, retestMistake, removeMistake,
       configurePasscode, clearPasscode, exportData, importData, resetAll,
     }}>
       {children}

@@ -63,3 +63,32 @@ export function dueFlashcards(state: UserState, allIds: string[]) {
     return !srs || srs.due <= now; // 没学过的 + 到期的
   }).length;
 }
+
+// ===== 闭环学习：错题本与掌握度 =====
+
+/** 仍需攻克的错题（未毕业） */
+export function activeMistakes(state: UserState) {
+  return Object.values(state.mistakes).filter((m) => !m.retired);
+}
+
+/** 今日到期、需要重测的错题 */
+export function dueMistakes(state: UserState) {
+  const now = Date.now();
+  return activeMistakes(state).filter((m) => m.due <= now);
+}
+
+/** 已攻克（连对达标毕业）的错题数 */
+export function masteredMistakes(state: UserState) {
+  return Object.values(state.mistakes).filter((m) => m.retired).length;
+}
+
+/** 弱项章节：有未毕业错题的章节，按错题数从多到少 */
+export function weakChapters(state: UserState) {
+  const counts: Record<string, number> = {};
+  for (const m of activeMistakes(state)) {
+    if (m.chapterId) counts[m.chapterId] = (counts[m.chapterId] ?? 0) + 1;
+  }
+  return Object.entries(counts)
+    .map(([chapterId, count]) => ({ chapterId, count }))
+    .sort((a, b) => b.count - a.count);
+}
