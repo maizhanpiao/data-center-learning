@@ -25,6 +25,11 @@ export default function PracticePage() {
       <PageHeader emoji="🧪" title="实操练习" subtitle="浏览器内动手练：故障排查模拟、命令行训练、计算器工具，以及引导式自助实验手册。" />
 
       <h2 className="mb-3 text-lg font-bold">🎮 模拟实操</h2>
+      <Link href="/practice/homelab" className="card-hover mb-3 block rounded-2xl border border-primary bg-primary-soft p-5">
+        <div className="flex items-center gap-2 text-base font-bold">🏠 homelab 搭建引导实验 <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-white">旗舰</span></div>
+        <p className="mt-1 text-sm text-muted">用你的 Mac + 联想 两台机，从装系统到 K8s、Ansible、监控，一步步搭出真实运维环境。分阶段可勾选、带验收清单。</p>
+        <span className="mt-2 inline-block text-xs font-semibold text-primary-strong">开始搭建 →</span>
+      </Link>
       <div className="mb-10 grid gap-3 sm:grid-cols-2">
         <Link href="/practice/scenarios" className="card-hover rounded-2xl border border-border bg-surface p-5">
           <div className="flex items-center gap-2 text-base font-bold">🚨 故障排查情景模拟</div>

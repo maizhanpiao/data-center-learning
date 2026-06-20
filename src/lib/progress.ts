@@ -1,5 +1,5 @@
-import { CHAPTERS, chaptersByTier } from "@/content/chapters";
-import { TIERS } from "@/content/tiers";
+import { CHAPTERS } from "@/content/chapters";
+import { TIERS, tierByLevel } from "@/content/tiers";
 import { UserState } from "./store";
 
 export function chapterDone(state: UserState, id: string) {
@@ -28,7 +28,8 @@ export interface TierStatus {
 }
 
 export function tierStatus(state: UserState, level: number): TierStatus {
-  const chs = chaptersByTier(level);
+  const parts = tierByLevel(level)?.parts ?? [];
+  const chs = CHAPTERS.filter((c) => parts.includes(c.part));
   const done = chs.filter((c) => chapterDone(state, c.id)).length;
   const total = chs.length;
   const pct = total ? Math.round((done / total) * 100) : 0;

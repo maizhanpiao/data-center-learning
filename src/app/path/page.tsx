@@ -1,9 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useStore } from "@/lib/store";
-import { TIERS } from "@/content/tiers";
+import { TIERS, ELECTIVE_PARTS } from "@/content/tiers";
 import { partById } from "@/content/parts";
-import { tierStatus, currentTier } from "@/lib/progress";
+import { chaptersByPart } from "@/content/chapters";
+import { tierStatus, currentTier, partProgress } from "@/lib/progress";
 import { PageHeader, ProgressBar } from "@/components/ui";
 
 export default function PathPage() {
@@ -12,7 +14,7 @@ export default function PathPage() {
 
   return (
     <div>
-      <PageHeader emoji="🏆" title="进阶地图" subtitle="6 段进阶体系：每段需通过【知识关】与【实操关】才能点亮徽章、解锁下一段。" />
+      <PageHeader emoji="🏆" title="进阶地图" subtitle="6 段进阶体系，对齐云原生运维主线：每段需通过【知识关】与【实操关】点亮徽章、解锁下一段。设施轨为选修。" />
 
       <div className="relative space-y-4">
         {TIERS.map((t) => {
@@ -78,6 +80,32 @@ export default function PathPage() {
             </div>
           );
         })}
+      </div>
+
+      {/* 选修轨：设施 / 动力 */}
+      <div className="mt-10">
+        <div className="mb-1 flex items-center gap-2">
+          <span className="text-lg font-bold">🏢 选修轨 · 设施 / 动力</span>
+        </div>
+        <p className="mb-4 text-sm text-muted">理解数据中心的物理底座（供配电、制冷、电工、暖通）。不计入主线闯关，但懂它能让你比纯软件的人更全面，部分岗位也需要。按兴趣选学。</p>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {ELECTIVE_PARTS.map((pid) => {
+            const p = partById(pid);
+            const pp = partProgress(state, pid);
+            const first = chaptersByPart(pid)[0];
+            return (
+              <Link key={pid} href={first ? `/learn/${first.id}` : "/learn"}
+                className="card-hover rounded-2xl border border-border bg-surface p-4">
+                <div className="flex items-center gap-2 font-semibold">{p.icon} {p.title}</div>
+                <div className="text-xs text-muted">{p.subtitle}</div>
+                <div className="mt-3 flex items-center gap-2">
+                  <ProgressBar pct={pp.pct} />
+                  <span className="shrink-0 text-xs tabular-nums">{pp.done}/{pp.total}</span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -11,6 +11,8 @@ export const PARTS: Part[] = [
   { id: 7, title: "安全 · 标准 · 职业", subtitle: "规范 · 认证 · 求职", icon: "🎓", color: "#be123c" },
   { id: 8, title: "Linux 系统运维", subtitle: "云原生主线起点 · 对标 RHCSA/RHCE", icon: "🐧", color: "#16a34a" },
   { id: 9, title: "容器与 Kubernetes", subtitle: "招聘核心 · 对标 CKA", icon: "☸️", color: "#326ce5" },
+  { id: 10, title: "云与虚拟化", subtitle: "虚拟化 · 公有/私有云 · 对标云认证", icon: "☁️", color: "#0891b2" },
+  { id: 11, title: "自动化与可观测性", subtitle: "Shell/Python/Git/Ansible · 监控 · SRE", icon: "🤖", color: "#7c3aed" },
 ];
 
 export function partById(id: number) {
