@@ -1,7 +1,7 @@
 import { Resource } from "@/lib/types";
 
 // 当前收录周（自动更新任务每周会追加更新的批次标签）
-export const CURRENT_WEEK = "2026-W25";
+export const CURRENT_WEEK = "2026-W26";
 
 // ============================================================
 // 初始精选资源库（之后由每周云端定时任务自动扩充与重排）
@@ -217,5 +217,55 @@ export const RESOURCES: Resource[] = [
     rating: 4, topics: [5, 6],
     reason: "云原生监控事实标准，学可观测性/SRE 必备，配合 Grafana 做可视化。",
     addedWeek: "2026-W25",
+  },
+
+  // ===== 2026-W26 本周新增 =====
+  {
+    id: "sadservers",
+    title: "SadServers（修复坏掉的 Linux 服务器）",
+    type: "工具", url: "https://sadservers.com", lang: "英", level: "进阶", price: "免费",
+    rating: 5, topics: [8, 11, 6],
+    reason: "浏览器里给你一台被故意搞坏的真实 Linux 服务器，限时排障——练 SRE/运维排错与面试手感的神器。",
+    addedWeek: "2026-W26",
+  },
+  {
+    id: "iximiuz-labs",
+    title: "iximiuz Labs（容器与 K8s 互动实验）",
+    type: "工具", url: "https://labs.iximiuz.com", lang: "英", level: "进阶", price: "免费",
+    rating: 5, topics: [9, 8],
+    reason: "浏览器里玩转容器/Kubernetes/网络的互动实验场，配套作者深入浅出的好文，进阶云原生很顶。",
+    addedWeek: "2026-W26",
+  },
+  {
+    id: "missing-semester",
+    title: "MIT The Missing Semester（命令行/Shell/Git）",
+    type: "视频", url: "https://missing.csail.mit.edu", lang: "英", level: "入门", price: "免费",
+    rating: 5, topics: [8, 11],
+    reason: "MIT 出品、专补“学校不教但天天要用”的工具课：Shell、脚本、Git、调试，运维基本功一网打尽。",
+    addedWeek: "2026-W26",
+  },
+  {
+    id: "overthewire-bandit",
+    title: "OverTheWire: Bandit（闯关学 Linux 命令行）",
+    type: "工具", url: "https://overthewire.org/wargames/bandit/", lang: "英", level: "入门", price: "免费",
+    rating: 4, topics: [8],
+    reason: "用 SSH 闯关、一关一个知识点地练 Linux 命令，游戏化、上瘾，零基础打命令功底很合适。",
+    addedWeek: "2026-W26",
+  },
+  {
+    id: "cncf-top-k8s-2026",
+    title: "CNCF：2026 年 Kubernetes 学习资源精选",
+    type: "资讯", url: "https://www.cncf.io/blog/2026/01/19/top-28-kubernetes-resources-for-2026-learn-and-stay-up-to-date/", lang: "英", level: "入门", price: "免费",
+    rating: 4, topics: [9],
+    reason: "CNCF 官方整理的当年 K8s 学习与跟进资源清单，想系统跟上云原生生态，照着这份按图索骥。",
+    addedWeek: "2026-W26",
+  },
+  {
+    id: "feisky-k8s-guide",
+    title: "Kubernetes 指南（中文开源书）",
+    type: "书籍", url: "https://kubernetes.feisky.xyz", lang: "中", level: "进阶", price: "免费",
+    rating: 4, topics: [9],
+    reason: "广受欢迎的中文 K8s 开源书，概念到实战、排障都有，中文读者啃 Kubernetes 的好帮手。",
+    addedWeek: "2026-W26",
   },
 ];
