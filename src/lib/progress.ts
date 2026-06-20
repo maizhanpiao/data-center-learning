@@ -1,5 +1,6 @@
 import { CHAPTERS } from "@/content/chapters";
 import { TIERS, tierByLevel } from "@/content/tiers";
+import { examByTier } from "@/content/exams";
 import { UserState } from "./store";
 
 export function chapterDone(state: UserState, id: string) {
@@ -23,7 +24,10 @@ export interface TierStatus {
   done: number;
   total: number;
   pct: number;
-  completed: boolean;
+  chaptersDone: boolean;  // 知识关：章节全部完成
+  examId?: string;        // 考核关对应的模拟考(若有)
+  examPassed: boolean;    // 考核关是否通过(无考试则视为已过)
+  completed: boolean;     // 知识关 + 考核关 都过
   unlocked: boolean;
 }
 
@@ -33,10 +37,15 @@ export function tierStatus(state: UserState, level: number): TierStatus {
   const done = chs.filter((c) => chapterDone(state, c.id)).length;
   const total = chs.length;
   const pct = total ? Math.round((done / total) * 100) : 0;
-  const completed = total > 0 && done === total;
-  // 解锁条件：第一段始终解锁；其余段需前一段完成
+  const chaptersDone = total > 0 && done === total;
+
+  const exam = examByTier(level);
+  const examPassed = exam ? !!state.examResults[exam.id]?.passed : true;
+
+  const completed = chaptersDone && examPassed;
+  // 解锁条件：第一段始终解锁；其余段需前一段完成(知识关+考核关)
   const prevCompleted = level === 1 ? true : tierStatus(state, level - 1).completed;
-  return { level, done, total, pct, completed, unlocked: prevCompleted };
+  return { level, done, total, pct, chaptersDone, examId: exam?.id, examPassed, completed, unlocked: prevCompleted };
 }
 
 /** 当前所处段位：最低的“未完成”段；全部完成则停在最高段 */

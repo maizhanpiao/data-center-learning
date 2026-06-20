@@ -57,3 +57,45 @@ export function keyOf(passcode: string) {
   }
   return "u_" + (h >>> 0).toString(36);
 }
+
+// ===== 资源库（AI 每周/手动更新写入这里，与静态精选库合并展示）=====
+
+let resourcesEnsured = false;
+export async function ensureResourcesTable() {
+  if (resourcesEnsured) return;
+  const sql = getSql();
+  await sql`
+    CREATE TABLE IF NOT EXISTS extra_resources (
+      id TEXT PRIMARY KEY,
+      data JSONB NOT NULL,
+      week TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+  resourcesEnsured = true;
+}
+
+/** 取出 AI 收录的全部资源（最新在前） */
+export async function getExtraResources(): Promise<unknown[]> {
+  await ensureResourcesTable();
+  const sql = getSql();
+  const rows = (await sql`SELECT data FROM extra_resources ORDER BY created_at DESC`) as { data: unknown }[];
+  return rows.map((r) => r.data);
+}
+
+/** 批量写入资源（按 id 去重，已存在则跳过） */
+export async function insertResources(items: { id: string; week: string }[]): Promise<number> {
+  await ensureResourcesTable();
+  const sql = getSql();
+  let added = 0;
+  for (const it of items) {
+    const res = (await sql`
+      INSERT INTO extra_resources (id, data, week)
+      VALUES (${it.id}, ${JSON.stringify(it)}, ${it.week})
+      ON CONFLICT (id) DO NOTHING
+      RETURNING id
+    `) as { id: string }[];
+    if (res.length > 0) added++;
+  }
+  return added;
+}

@@ -268,4 +268,70 @@ export const RESOURCES: Resource[] = [
     reason: "广受欢迎的中文 K8s 开源书，概念到实战、排障都有，中文读者啃 Kubernetes 的好帮手。",
     addedWeek: "2026-W26",
   },
+
+  // ===== 精选库扩充：Linux =====
+  { id: "linux-journey", title: "Linux Journey", type: "工具", url: "https://linuxjourney.com", lang: "英", level: "入门", price: "免费", rating: 5, topics: [8], reason: "交互式从零学 Linux，分模块循序渐进、带练习，零基础友好。", addedWeek: "2026-W25" },
+  { id: "tlcl-book", title: "《Linux 命令行》(TLCL 中文版)", type: "书籍", url: "https://billie66.github.io/TLCL/", lang: "中", level: "入门", price: "免费", rating: 5, topics: [8], reason: "经典《The Linux Command Line》中文在线版，命令行系统入门首选。", addedWeek: "2026-W25" },
+  { id: "explainshell", title: "ExplainShell", type: "工具", url: "https://explainshell.com", lang: "英", level: "入门", price: "免费", rating: 4, topics: [8], reason: "粘贴一条命令，逐个参数解释含义，看不懂命令时的神器。", addedWeek: "2026-W25" },
+  { id: "tldr-pages", title: "tldr pages", type: "工具", url: "https://tldr.sh", lang: "英", level: "入门", price: "免费", rating: 4, topics: [8], reason: "命令的“人话版”速查，给常用命令配实用示例，比 man 友好得多。", addedWeek: "2026-W25" },
+  { id: "archwiki", title: "Arch Wiki", type: "官方", url: "https://wiki.archlinux.org", lang: "英", level: "进阶", price: "免费", rating: 5, topics: [8], reason: "公认最全的 Linux 知识库，几乎任何配置/排障问题都能查到。", addedWeek: "2026-W25" },
+  { id: "redhat-developer", title: "Red Hat Developer", type: "官方", url: "https://developers.redhat.com", lang: "英", level: "进阶", price: "免费", rating: 4, topics: [8, 9, 11], reason: "红帽官方开发者门户，免费 RHEL 订阅 + 大量教程，备考 RHCSA/RHCE 实用。", addedWeek: "2026-W25" },
+  { id: "lf-intro-linux", title: "Linux 入门 LFS101 (edX)", type: "视频", url: "https://www.edx.org/learn/linux/the-linux-foundation-introduction-to-linux", lang: "英", level: "入门", price: "免费", rating: 4, topics: [8], reason: "Linux 基金会官方免费入门课，体系完整、权威。", addedWeek: "2026-W25" },
+
+  // ===== 精选库扩充：网络 =====
+  { id: "practical-networking", title: "Practical Networking", type: "文章", url: "https://www.practicalnetworking.net", lang: "英", level: "入门", price: "免费", rating: 5, topics: [5], reason: "把网络原理讲得极透彻的图文教程，子网/路由/交换一看就懂。", addedWeek: "2026-W25" },
+  { id: "wizardzines", title: "Wizard Zines (Julia Evans)", type: "文章", url: "https://wizardzines.com", lang: "英", level: "入门", price: "免费", rating: 4, topics: [5, 8, 11], reason: "用漫画式小册子讲网络/Linux/调试，生动易记，部分免费。", addedWeek: "2026-W25" },
+  { id: "subnetting-practice", title: "Subnetting Practice", type: "工具", url: "https://subnettingpractice.com", lang: "英", level: "入门", price: "免费", rating: 4, topics: [5], reason: "在线刷子网划分题，把 IP/子网算到形成肌肉记忆。", addedWeek: "2026-W25" },
+  { id: "gns3", title: "GNS3 网络模拟器", type: "工具", url: "https://www.gns3.com", lang: "英", level: "进阶", price: "免费", rating: 4, topics: [5], reason: "免费专业网络仿真，能跑真实路由器/防火墙镜像，比 Packet Tracer 更接近生产。", addedWeek: "2026-W25" },
+  { id: "ben-eater", title: "Ben Eater (YouTube)", type: "视频", url: "https://www.youtube.com/@BenEater", lang: "英", level: "入门", price: "免费", rating: 4, topics: [5, 0], reason: "从底层讲清网络与计算机原理，深入浅出，适合打地基。", addedWeek: "2026-W25" },
+
+  // ===== 精选库扩充：容器与 K8s =====
+  { id: "docker-docs", title: "Docker 官方文档", type: "官方", url: "https://docs.docker.com", lang: "英", level: "入门", price: "免费", rating: 5, topics: [9], reason: "Docker 第一手资料，安装、镜像、网络、Compose 全覆盖。", addedWeek: "2026-W25" },
+  { id: "docker-curriculum", title: "Docker for Beginners", type: "文章", url: "https://docker-curriculum.com", lang: "英", level: "入门", price: "免费", rating: 4, topics: [9], reason: "广受好评的 Docker 零基础上手教程，跟着做一遍就懂。", addedWeek: "2026-W25" },
+  { id: "k8s-hard-way", title: "Kubernetes The Hard Way", type: "文章", url: "https://github.com/kelseyhightower/kubernetes-the-hard-way", lang: "英", level: "进阶", price: "免费", rating: 5, topics: [9], reason: "Kelsey Hightower 手把手从零搭 K8s 集群，吃透组件原理的经典。", addedWeek: "2026-W25" },
+  { id: "play-with-k8s", title: "Play with Kubernetes", type: "工具", url: "https://labs.play-with-k8s.com", lang: "英", level: "入门", price: "免费", rating: 4, topics: [9], reason: "浏览器里几秒起一个多节点 K8s 集群练手，免安装。", addedWeek: "2026-W25" },
+  { id: "cka-curriculum", title: "CKA/CKAD 官方考纲", type: "官方", url: "https://github.com/cncf/curriculum", lang: "英", level: "进阶", price: "免费", rating: 5, topics: [9], reason: "CNCF 官方公布的 CKA/CKAD/CKS 考纲，备考对照清单。", addedWeek: "2026-W25" },
+  { id: "k8s-quanwei", title: "《Kubernetes 权威指南》", type: "书籍", url: "https://book.douban.com/subject/35458432/", lang: "中", level: "进阶", price: "付费", rating: 4, topics: [9], reason: "中文 K8s 大部头，体系全面，适合系统啃透概念与实战。", addedWeek: "2026-W25" },
+  { id: "learnk8s", title: "Learnk8s 博客", type: "文章", url: "https://learnk8s.io/articles", lang: "英", level: "进阶", price: "免费", rating: 4, topics: [9], reason: "高质量 K8s 深度长文（资源管理、网络、扩缩容），进阶必读。", addedWeek: "2026-W25" },
+
+  // ===== 精选库扩充：云与虚拟化 =====
+  { id: "aws-skillbuilder", title: "AWS Skill Builder", type: "视频", url: "https://skillbuilder.aws", lang: "英", level: "入门", price: "免费", rating: 4, topics: [10], reason: "AWS 官方免费课程平台，按角色/认证规划学习路径。", addedWeek: "2026-W25" },
+  { id: "aws-well-architected", title: "AWS Well-Architected 框架", type: "官方", url: "https://aws.amazon.com/architecture/well-architected/", lang: "英", level: "进阶", price: "免费", rating: 4, topics: [10, 6], reason: "云上架构最佳实践(可靠/安全/成本/性能)，做云运维很受用。", addedWeek: "2026-W25" },
+  { id: "aliyun-developer", title: "阿里云开发者社区", type: "社区", url: "https://developer.aliyun.com", lang: "中", level: "入门", price: "免费", rating: 4, topics: [10, 9, 8], reason: "中文云技术社区 + 免费课程 + 实验室，国内云方向资源集中地。", addedWeek: "2026-W25" },
+  { id: "proxmox-wiki", title: "Proxmox VE 官方文档", type: "官方", url: "https://pve.proxmox.com/wiki/Main_Page", lang: "英", level: "进阶", price: "免费", rating: 4, topics: [10, 4], reason: "homelab 装 Proxmox 必备，虚拟化/集群/存储配置全有。", addedWeek: "2026-W25" },
+  { id: "ms-learn-azure", title: "Microsoft Learn (Azure)", type: "官方", url: "https://learn.microsoft.com/training/azure/", lang: "英", level: "入门", price: "免费", rating: 4, topics: [10], reason: "微软官方免费学习平台，Azure 与云基础边学边练。", addedWeek: "2026-W25" },
+  { id: "freecodecamp", title: "freeCodeCamp (YouTube)", type: "视频", url: "https://www.youtube.com/@freecodecamp", lang: "英", level: "入门", price: "免费", rating: 4, topics: [10, 9, 11], reason: "海量免费长视频课(AWS/K8s/Docker/Linux)，适合系统过一遍。", addedWeek: "2026-W25" },
+
+  // ===== 精选库扩充：自动化与 SRE =====
+  { id: "google-sre-books", title: "Google SRE 三部曲", type: "书籍", url: "https://sre.google/books/", lang: "英", level: "进阶", price: "免费", rating: 5, topics: [11, 6], reason: "SRE 理念奠基之作，全文免费在线，运维进阶必读。", addedWeek: "2026-W25" },
+  { id: "ansible-docs", title: "Ansible 官方文档", type: "官方", url: "https://docs.ansible.com", lang: "英", level: "入门", price: "免费", rating: 5, topics: [11], reason: "Ansible 第一手资料，模块/playbook/最佳实践齐全。", addedWeek: "2026-W25" },
+  { id: "jeff-geerling", title: "Jeff Geerling (YouTube)", type: "视频", url: "https://www.youtube.com/@JeffGeerling", lang: "英", level: "进阶", price: "免费", rating: 4, topics: [11, 4], reason: "《Ansible for DevOps》作者，自动化 + homelab 实战，干货多。", addedWeek: "2026-W25" },
+  { id: "progit", title: "Pro Git（中文版）", type: "书籍", url: "https://git-scm.com/book/zh/v2", lang: "中", level: "入门", price: "免费", rating: 5, topics: [11], reason: "Git 官方权威教程，有完整中文版，从入门到原理。", addedWeek: "2026-W25" },
+  { id: "learn-git-branching", title: "Learn Git Branching", type: "工具", url: "https://learngitbranching.js.org", lang: "中", level: "入门", price: "免费", rating: 5, topics: [11], reason: "可视化交互式学 Git 分支，有中文，玩着就学会了。", addedWeek: "2026-W25" },
+  { id: "automate-boring", title: "Automate the Boring Stuff", type: "书籍", url: "https://automatetheboringstuff.com", lang: "英", level: "入门", price: "免费", rating: 4, topics: [11], reason: "用 Python 自动化日常的经典免费书，运维学 Python 很合适。", addedWeek: "2026-W25" },
+  { id: "twelve-factor", title: "十二要素应用 (中文)", type: "文章", url: "https://12factor.net/zh_cn", lang: "中", level: "进阶", price: "免费", rating: 4, topics: [11, 9], reason: "云原生应用设计的经典方法论，有中文，理解现代部署必读。", addedWeek: "2026-W25" },
+  { id: "grafana-play", title: "Grafana Play", type: "工具", url: "https://play.grafana.org", lang: "英", level: "入门", price: "免费", rating: 4, topics: [11, 6], reason: "免登录直接玩 Grafana 大盘，直观感受可观测性。", addedWeek: "2026-W25" },
+
+  // ===== 精选库扩充：设施 / 动力 =====
+  { id: "eng-mindset", title: "The Engineering Mindset (YouTube)", type: "视频", url: "https://www.youtube.com/@Theengineeringmindset", lang: "英", level: "入门", price: "免费", rating: 5, topics: [2, 3, 4], reason: "用动画把电气与暖通原理讲得极清楚，设施方向强烈推荐。", addedWeek: "2026-W25" },
+  { id: "bilibili-diangong", title: "B 站 电工/维修电工教学", type: "视频", url: "https://search.bilibili.com/all?keyword=电工基础", lang: "中", level: "入门", price: "免费", rating: 3, topics: [2], reason: "中文电工入门视频多，直观学接线/元件/安全；认准系统化的UP主。", addedWeek: "2026-W25" },
+  { id: "bilibili-nuantong", title: "B 站 制冷/暖通教学", type: "视频", url: "https://search.bilibili.com/all?keyword=制冷原理", lang: "中", level: "入门", price: "免费", rating: 3, topics: [3], reason: "中文制冷暖通入门视频，看懂制冷循环与空调系统。", addedWeek: "2026-W25" },
+
+  // ===== 精选库扩充：行业资讯 =====
+  { id: "idcquan", title: "中国 IDC 圈", type: "资讯", url: "https://www.idcquan.com", lang: "中", level: "入门", price: "免费", rating: 3, topics: [1, 4, 7], reason: "国内数据中心行业资讯门户，了解政策/市场/招聘动态。", addedWeek: "2026-W25" },
+  { id: "datacenter-frontier", title: "Data Center Frontier", type: "资讯", url: "https://www.datacenterfrontier.com", lang: "英", level: "入门", price: "免费", rating: 4, topics: [1, 4, 6], reason: "英文数据中心深度资讯，趋势/选址/能耗/AI 算力。", addedWeek: "2026-W25" },
+  { id: "servethehome", title: "ServeTheHome", type: "资讯", url: "https://www.servethehome.com", lang: "英", level: "入门", price: "免费", rating: 4, topics: [4, 5, 10], reason: "服务器/硬件/homelab 深度评测，了解数据中心硬件的好去处。", addedWeek: "2026-W25" },
+
+  // ===== 精选库扩充：社区 =====
+  { id: "reddit-k8s", title: "Reddit r/kubernetes", type: "社区", url: "https://www.reddit.com/r/kubernetes/", lang: "英", level: "进阶", price: "免费", rating: 4, topics: [9], reason: "K8s 从业者社区，踩坑、最佳实践、招聘趋势。", addedWeek: "2026-W25" },
+  { id: "reddit-devops", title: "Reddit r/devops", type: "社区", url: "https://www.reddit.com/r/devops/", lang: "英", level: "入门", price: "免费", rating: 4, topics: [11], reason: "DevOps/SRE 大社区，职业路径与工具讨论活跃。", addedWeek: "2026-W25" },
+  { id: "reddit-homelab", title: "Reddit r/homelab", type: "社区", url: "https://www.reddit.com/r/homelab/", lang: "英", level: "入门", price: "免费", rating: 4, topics: [10, 4], reason: "家庭实验室玩家社区，搭迷你机房的灵感与避坑。", addedWeek: "2026-W25" },
+  { id: "serverfault", title: "Server Fault", type: "社区", url: "https://serverfault.com", lang: "英", level: "进阶", price: "免费", rating: 4, topics: [8, 5, 6], reason: "系统/网络/运维问答站(Stack Exchange)，排障搜答案首选。", addedWeek: "2026-W25" },
+  { id: "juejin", title: "掘金", type: "社区", url: "https://juejin.cn", lang: "中", level: "入门", price: "免费", rating: 4, topics: [8, 9, 10, 11], reason: "中文技术社区，云原生/后端/运维好文多，跟进国内实践。", addedWeek: "2026-W25" },
+
+  // ===== 精选库扩充：认证 =====
+  { id: "cncf-cka-cert", title: "CNCF CKA 认证", type: "证书", url: "https://www.cncf.io/training/certification/cka/", lang: "英", level: "进阶", price: "付费", rating: 5, topics: [9], reason: "Kubernetes 管理员官方认证，招聘高频、真集群上机考。", addedWeek: "2026-W25" },
+  { id: "aws-cert", title: "AWS 认证官网", type: "证书", url: "https://aws.amazon.com/certification/", lang: "英", level: "进阶", price: "付费", rating: 4, topics: [10], reason: "AWS 认证体系(SAA 等)官方入口，全球认可的云证书。", addedWeek: "2026-W25" },
+  { id: "aliyun-cert", title: "阿里云认证 (ACA/ACP/ACE)", type: "证书", url: "https://edu.aliyun.com/certification", lang: "中", level: "进阶", price: "付费", rating: 4, topics: [10], reason: "国内份额大的云认证，中文考试，云岗加分。", addedWeek: "2026-W25" },
+  { id: "comptia-linux", title: "CompTIA Linux+", type: "证书", url: "https://www.comptia.org/certifications/linux", lang: "英", level: "进阶", price: "付费", rating: 3, topics: [8], reason: "厂商中立的 Linux 认证，体系清晰，可作 RHCSA 之外的选择。", addedWeek: "2026-W25" },
 ];

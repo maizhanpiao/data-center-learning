@@ -14,6 +14,7 @@ const LINKS = [
   { href: "/practice", label: "实操练习", icon: "🧪" },
   { href: "/flashcards", label: "抽认卡", icon: "🎴" },
   { href: "/mistakes", label: "错题本", icon: "❌" },
+  { href: "/exams", label: "模拟考", icon: "📝" },
   { href: "/resources", label: "资源库", icon: "🌐" },
   { href: "/settings", label: "设置", icon: "⚙️" },
 ];

@@ -22,7 +22,7 @@ export interface ScenarioStep {
 export interface Scenario {
   id: string;
   title: string;
-  domain: "Kubernetes" | "Linux" | "设施";
+  domain: "Kubernetes" | "Linux" | "网络" | "设施";
   difficulty: "入门" | "进阶";
   brief: string;
   steps: ScenarioStep[]; // 第一个为起点
@@ -147,6 +147,188 @@ export const SCENARIOS: Scenario[] = [
         terminal: true,
         situation: "✅ 热点定位完成。",
         summary: "处置：补齐盲板、规范冷热通道封闭，恢复气流后温度回落；同时检查该列制冷余量。\n\n带走的认知：机房高温不一定是“空调不够冷”，更多是“冷量没送对地方”——气流管理(盲板/封闭/架空地板开孔)往往是关键。安全第一，按证据判断。",
+      },
+    ],
+  },
+
+  {
+    id: "k8s-svc-unreachable",
+    title: "Pod 都正常，Service 却访问不通",
+    domain: "Kubernetes",
+    difficulty: "进阶",
+    brief: "前端报错连不上后端。`kubectl get pods` 显示后端 3 个 Pod 全是 Running，但通过 Service 访问超时。",
+    steps: [
+      {
+        id: "start",
+        situation: "Pod 都 Running，但 Service 访问不通。第一步查什么？",
+        next: "endpoints",
+        choices: [
+          { text: "kubectl get endpoints 看 Service 后面有没有挂上 Pod", correct: true, feedback: "✅ 对。Endpoints 为空往往就是 selector 没匹配上 Pod。" },
+          { text: "直接重启所有 Pod", correct: false, feedback: "❌ Pod 本来就正常，重启无济于事，先看 Service 与 Pod 的关联。" },
+          { text: "重装 CNI 网络插件", correct: false, feedback: "❌ 还没定位就动网络底座，过度操作，先收集证据。" },
+        ],
+      },
+      {
+        id: "endpoints",
+        situation: "`kubectl get endpoints backend` 显示 ENDPOINTS 为 <none>（没有任何后端）。下一步？",
+        next: "label",
+        choices: [
+          { text: "对比 Service 的 selector 与 Pod 的 labels 是否一致", correct: true, feedback: "✅ 正确。Endpoints 为空，几乎必然是标签选择器对不上。" },
+          { text: "加大 Service 的端口范围", correct: false, feedback: "❌ 与端口无关，问题在选择器匹配。" },
+        ],
+      },
+      {
+        id: "label",
+        situation: "发现 Service 的 selector 是 app=backend，但 Pod 的 label 是 app=back-end（多了个连字符）。结论与处置？",
+        next: "win",
+        choices: [
+          { text: "标签不匹配导致 Service 选不到 Pod；统一标签(改 Deployment 模板或 Service selector)", correct: true, feedback: "✅ 找到根因了，统一两边标签即可恢复。" },
+          { text: "是 DNS 问题，改 CoreDNS", correct: false, feedback: "❌ 证据指向标签不匹配，不是 DNS。" },
+        ],
+      },
+      {
+        id: "win",
+        terminal: true,
+        situation: "✅ 服务恢复。",
+        summary: "排障链路：Service 不通 → 看 Endpoints(为空) → 比对 selector 与 Pod label → 发现标签不一致。\n\n带走的认知：K8s 里 Service 靠 label/selector 关联 Pod，“Endpoints 为空”是标签不匹配的强信号。先看 Endpoints，能少走很多弯路。",
+      },
+    ],
+  },
+
+  {
+    id: "k8s-node-notready",
+    title: "一个节点变成 NotReady",
+    domain: "Kubernetes",
+    difficulty: "进阶",
+    brief: "监控告警：节点 node2 状态 NotReady，上面的 Pod 开始被驱逐。",
+    steps: [
+      {
+        id: "start",
+        situation: "节点 NotReady，先做什么？",
+        next: "describe",
+        choices: [
+          { text: "kubectl describe node node2 看 Conditions 与 Events", correct: true, feedback: "✅ 对，先看节点状况(磁盘/内存/网络/kubelet)。" },
+          { text: "立刻 drain 并删除该节点", correct: false, feedback: "❌ 还没定位就删节点太激进，先查原因。" },
+        ],
+      },
+      {
+        id: "describe",
+        situation: "Conditions 显示 DiskPressure=True，且 kubelet 最近有重启。登录节点后该查？",
+        next: "win",
+        choices: [
+          { text: "df -h 看磁盘是否写满，并检查 kubelet 服务状态/日志", correct: true, feedback: "✅ 正确，DiskPressure 多半是磁盘满导致 kubelet 异常。" },
+          { text: "重装操作系统", correct: false, feedback: "❌ 灾难级操作，先按证据清理磁盘。" },
+        ],
+      },
+      {
+        id: "win",
+        terminal: true,
+        situation: "✅ 节点恢复 Ready。",
+        summary: "排障链路：节点 NotReady → describe node 看 Conditions(DiskPressure) → 上节点 df -h + 查 kubelet → 清理磁盘/重启 kubelet。\n\n带走的认知：节点问题先看 describe 的 Conditions 和 Events；DiskPressure/MemoryPressure 等直接点明方向。",
+      },
+    ],
+  },
+
+  {
+    id: "linux-service-down",
+    title: "nginx 服务起不来",
+    domain: "Linux",
+    difficulty: "入门",
+    brief: "部署后 `systemctl start nginx` 失败，网站打不开。",
+    steps: [
+      {
+        id: "start",
+        situation: "服务启动失败，第一步？",
+        next: "test",
+        choices: [
+          { text: "systemctl status nginx + journalctl -u nginx 看具体报错", correct: true, feedback: "✅ 对，先看状态和日志拿到确切错误。" },
+          { text: "重启服务器", correct: false, feedback: "❌ 盲目重启掩盖问题，先看日志。" },
+          { text: "把 nginx 卸载重装", correct: false, feedback: "❌ 八成是配置或端口问题，重装多半白费。" },
+        ],
+      },
+      {
+        id: "test",
+        situation: "日志提示 “bind() to 0.0.0.0:80 failed (98: Address already in use)”。下一步？",
+        next: "win",
+        choices: [
+          { text: "用 ss -tlnp 找出谁占用了 80 端口，再决定停它或换端口", correct: true, feedback: "✅ 正确，端口被占就先定位占用进程。" },
+          { text: "把 nginx 配置里的 error_log 关掉", correct: false, feedback: "❌ 关日志只会让你更看不见问题。" },
+        ],
+      },
+      {
+        id: "win",
+        terminal: true,
+        situation: "✅ nginx 正常启动。",
+        summary: "排障链路：服务起不来 → status/journalctl 看报错 → “端口被占用” → ss -tlnp 定位占用进程 → 停掉冲突进程或改端口。\n\n带走的认知：服务启动失败，答案几乎都在 journalctl 里；常见根因是端口冲突或配置语法错(可用 nginx -t 验证配置)。",
+      },
+    ],
+  },
+
+  {
+    id: "net-intermittent",
+    title: "网站时通时断、偶发超时",
+    domain: "网络",
+    difficulty: "进阶",
+    brief: "用户反馈网站“有时打得开、有时超时”。服务端 CPU/内存都正常。",
+    steps: [
+      {
+        id: "start",
+        situation: "时通时断，先判断是应用问题还是网络问题，怎么做？",
+        next: "ping",
+        choices: [
+          { text: "持续 ping 目标看丢包/延迟，并结合监控分层定位", correct: true, feedback: "✅ 对，先用 ping/监控判断是网络层还是应用层。" },
+          { text: "直接改应用代码加重试", correct: false, feedback: "❌ 还没定位就改代码，可能掩盖真正的网络问题。" },
+        ],
+      },
+      {
+        id: "ping",
+        situation: "持续 ping 显示间歇性高延迟和丢包；traceroute 发现卡在某一跳。下一步？",
+        next: "win",
+        choices: [
+          { text: "定位到该跳对应的链路/设备，检查端口错包、光功率或该链路负载", correct: true, feedback: "✅ 正确，顺着丢包的那一跳查物理链路与端口状态。" },
+          { text: "把所有交换机重启一遍", correct: false, feedback: "❌ 大面积重启影响业务，应精准定位到问题链路。" },
+        ],
+      },
+      {
+        id: "win",
+        terminal: true,
+        situation: "✅ 找到抖动链路。",
+        summary: "排障链路：时通时断 → ping 看丢包/延迟(分清网络/应用) → traceroute 定位到具体一跳 → 查该链路端口错包/光功率/负载。\n\n带走的认知：间歇性问题靠“持续观测 + 分层定位”，别凭感觉改代码或大面积重启。",
+      },
+    ],
+  },
+
+  {
+    id: "facility-power-outage",
+    title: "市电中断，机房靠什么撑住",
+    domain: "设施",
+    difficulty: "入门",
+    brief: "动环告警：市电失电。机房还在运行，你需要确认应急供电链路是否正常接力。",
+    steps: [
+      {
+        id: "start",
+        situation: "市电中断的第一时间，最该确认什么？",
+        next: "gen",
+        choices: [
+          { text: "确认 UPS 是否已无缝切换、IT 负载是否仍正常供电", correct: true, feedback: "✅ 对。UPS 的作用就是市电中断瞬间无缝顶上，先确认它在带载。" },
+          { text: "立刻手动拉闸断电检修", correct: false, feedback: "❌ 机房还在运行，盲目断电会直接造成宕机。" },
+          { text: "什么都不做，等市电自己回来", correct: false, feedback: "❌ 电池只能撑几分钟，必须确认柴发接力，不能干等。" },
+        ],
+      },
+      {
+        id: "gen",
+        situation: "UPS 正在放电、电池可撑约 10 分钟。要让供电持续，靠什么接力？该确认什么？",
+        next: "win",
+        choices: [
+          { text: "确认柴油发电机自动启动、ATS 完成切换，并监控油量/水温/频率", correct: true, feedback: "✅ 正确。柴发是长时供电来源，UPS 只是过渡到柴发的桥梁。" },
+          { text: "再加几组 UPS 电池就行", correct: false, feedback: "❌ 电池只解决分钟级过渡，长时断电必须靠柴发。" },
+        ],
+      },
+      {
+        id: "win",
+        terminal: true,
+        situation: "✅ 柴发接力成功，供电稳定。",
+        summary: "供电链路：市电失电 → UPS 无缝切换(撑分钟级) → 柴油发电机自动启动 + ATS 切换(长时供电)。处置：确认各级切换正常并监控柴发运行参数。\n\n带走的认知：数据中心“不断电”靠的是 市电→UPS→柴发 三级接力；UPS 争取的是启动柴发的时间，缺一不可。",
       },
     ],
   },

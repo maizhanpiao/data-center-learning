@@ -69,6 +69,16 @@ export default function PathPage() {
                     🎯 <span className="font-semibold">对标认证：</span>{t.certs}
                   </div>
 
+                  {ts.examId && (
+                    <div className={`mt-2 flex flex-wrap items-center gap-2 rounded-lg px-3 py-2 text-xs ${ts.examPassed ? "bg-[var(--ok-soft)]" : "bg-surface-2"}`}>
+                      <span className="font-semibold">📝 考核关：</span>
+                      <span>{ts.examPassed ? "✅ 模拟考已通过" : "需通过本段模拟考才能解锁下一段"}</span>
+                      <Link href={`/exams/${ts.examId}`} className="ml-auto font-semibold text-primary-strong hover:underline">
+                        {ts.examPassed ? "再考一次 →" : "去模拟考 →"}
+                      </Link>
+                    </div>
+                  )}
+
                   <details className="mt-2">
                     <summary className="cursor-pointer text-xs text-muted hover:text-primary-strong">解锁条件清单 ▾</summary>
                     <ul className="mt-1 ml-4 list-disc text-xs text-muted">

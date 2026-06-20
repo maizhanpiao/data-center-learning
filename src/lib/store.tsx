@@ -42,6 +42,7 @@ export interface UserState {
   flashcards: Record<string, SRS>;
   practiceDone: Record<string, boolean>;
   mistakes: Record<string, Mistake>;
+  examResults: Record<string, { best: number; passed: boolean; lastTs: number }>;
   name: string;
   updatedAt: number;
 }
@@ -53,6 +54,7 @@ const EMPTY: UserState = {
   flashcards: {},
   practiceDone: {},
   mistakes: {},
+  examResults: {},
   name: "",
   updatedAt: 0,
 };
@@ -74,6 +76,7 @@ interface StoreCtx {
   tagMistakeReason: (qid: string, reason: MistakeReason) => void;
   retestMistake: (qid: string, correct: boolean) => void;
   removeMistake: (qid: string) => void;
+  setExamResult: (examId: string, pct: number, passed: boolean) => void;
   setPracticeDone: (id: string, done: boolean) => void;
   setName: (n: string) => void;
   configurePasscode: (code: string) => Promise<boolean>;
@@ -258,6 +261,23 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     });
   }, [mutate]);
 
+  const setExamResult = useCallback((examId: string, pct: number, passed: boolean) => {
+    mutate((s) => {
+      const prev = s.examResults[examId];
+      return {
+        ...s,
+        examResults: {
+          ...s.examResults,
+          [examId]: {
+            best: Math.max(prev?.best ?? 0, pct),
+            passed: (prev?.passed ?? false) || passed,
+            lastTs: Date.now(),
+          },
+        },
+      };
+    });
+  }, [mutate]);
+
   const configurePasscode = useCallback(async (code: string) => {
     try {
       const r = await fetch("/api/state", { headers: { "x-passcode": code } });
@@ -308,7 +328,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     <Ctx.Provider value={{
       state, sync, passcodeSet,
       toggleChapter, setQuizScore, setNote, reviewCard, setPracticeDone, setName,
-      recordMistakes, tagMistakeReason, retestMistake, removeMistake,
+      recordMistakes, tagMistakeReason, retestMistake, removeMistake, setExamResult,
       configurePasscode, clearPasscode, exportData, importData, resetAll,
     }}>
       {children}
